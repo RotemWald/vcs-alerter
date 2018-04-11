@@ -1,0 +1,19 @@
+move
+add
+tool
+update
+started
+tab
+erased
+deleted
+left the session
+change
+renamed
+join
+take
+control
+leave
+room
+build
+intersection
+hide
