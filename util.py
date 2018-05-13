@@ -1,4 +1,8 @@
 import string
+from googletrans import Translator
+import nltk
+import re
+from nltk.corpus import stopwords
 
 PATH_TO_RESOURCES = "/Users/rotemwald/PycharmProjects/FinalProject/resources/"
 
@@ -39,3 +43,36 @@ def get_all_values_by_key(list_of_dict, key):
 def remove_punctuation_from_str(s):
     exclude = set(string.punctuation)
     return ''.join(c for c in s if c not in exclude)
+
+
+def stem_sentence(sentence):
+    lancaster = nltk.LancasterStemmer()
+    return " ".join([lancaster.stem(w) for w in sentence.split(" ")])
+
+
+# def clean_messages(messages_list):
+#     cleaned_messages = []
+#     for msg in messages_list:
+#         cleaned_messages.append(clean_single_message(msg))
+#     return cleaned_messages
+
+
+def clean_single_message(msg):
+    cleaned_msg = re.sub("[^a-zA-Z']", " ", msg)
+    return " ".join([word for word in cleaned_msg.split() if word not in stopwords.words("english")])
+
+
+def preprocess_messages(msg_list, translator):
+    preprocessed_messages = []
+    for msg in msg_list:
+        preprocessed_messages.append(preprocess_message(msg, translator))
+
+    return preprocessed_messages
+
+
+def preprocess_message(msg, translator):
+    english_message = translator.translate_message(msg)
+    cleaned_message = clean_single_message(english_message)
+    message_stemmed = stem_sentence(cleaned_message)
+
+    return message_stemmed

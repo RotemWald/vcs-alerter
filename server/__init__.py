@@ -8,7 +8,8 @@ from dateutil import parser as date_parser
 from message_info import MessageType
 from message_tag import MessageTag
 import message_info as mi
-from tagger import sentence_tagger
+# if you want to change to ml sentence tagger, you should replace tagger.tagger_rule_based with tagger.tagger_ml_based
+from tagger.tagger_rule_based import sentence_tagger
 from alerter import alerter as alerter_component
 
 VCS_REST_URI = 'http://www.vcs-team.tk/report'
@@ -26,7 +27,7 @@ class TextMessage(Resource):
         json_data = request.get_json(force=True)
 
         message_text = json_data['message_text']
-        room_id = json_data['room_id']
+        room_id = int(json_data['room_id'])
         user_id = json_data['user_id']
         timestamp = json_data['timestamp']
 
@@ -41,7 +42,7 @@ class DragMessage(Resource):
     def post(self):
         json_data = request.get_json(force=True)
 
-        room_id = json_data['room_id']
+        room_id = int(json_data['room_id'])
         user_id = json_data['user_id']
         timestamp = json_data['timestamp']
 
@@ -55,7 +56,7 @@ class CheckDirectSolutionMessage(Resource):
     def post(self):
         json_data = request.get_json(force=True)
 
-        room_id = json_data['room_id']
+        room_id = int(json_data['room_id'])
         timestamp = json_data['timestamp']
 
         message_info = mi.MessageInfo(MessageTag.NONE, MessageType.CHECK_DS, room_id, 0,
@@ -69,7 +70,7 @@ class UserConnectMessage(Resource):
     def post(self):
         json_data = request.get_json(force=True)
 
-        room_id = json_data['room_id']
+        room_id = int(json_data['room_id'])
         user_id = json_data['user_id']
         timestamp = json_data['timestamp']
 
@@ -84,7 +85,7 @@ class UserDisconnectMessage(Resource):
     def post(self):
         json_data = request.get_json(force=True)
 
-        room_id = json_data['room_id']
+        room_id = int(json_data['room_id'])
         user_id = json_data['user_id']
         timestamp = json_data['timestamp']
 
@@ -114,4 +115,4 @@ api.add_resource(UserDisconnectMessage, '/user_disconnect_message')
 
 if __name__ == '__main__':
     check_idleness()
-    app.run(host='0.0.0.0', port=5002)
+    app.run(host='0.0.0.0', port=36635)

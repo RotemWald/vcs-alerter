@@ -1,4 +1,4 @@
-from tagger import file_tagger
+from tagger.tagger_rule_based import file_tagger
 import util
 import pandas as pd
 import numpy as np

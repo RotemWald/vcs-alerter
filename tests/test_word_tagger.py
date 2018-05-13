@@ -1,5 +1,5 @@
 import unittest
-from tagger import word_tagger as wt
+from tagger.tagger_rule_based import word_tagger as wt
 from message_tag import MessageTag
 
 
