@@ -106,6 +106,38 @@ class AlerterTest(unittest.TestCase):
         assert self.alerter.check_idleness_for_test(msg_info_8.room_id,
                                                     msg_info_8.timestamp) is CriticalMoment.NONE, "ERROR"
 
+    def test_no_idleness_when_all_users_disconnect_then_connect(self):
+        msg_info_1 = mi.MessageInfo(MessageTag.NONE, MessageType.USER_CONNECT, 0, 0,
+                                    dt.datetime(2018, 3, 17, 16, 41, 0))
+
+        # this message opens the room
+        msg_info_2 = mi.MessageInfo(MessageTag.MAT, MessageType.TEXT, 0, 0, dt.datetime(2018, 3, 17, 16, 42, 0))
+
+        msg_info_3 = mi.MessageInfo(MessageTag.NONE, MessageType.CHECK_IDLENESS, 0, 0,
+                                    dt.datetime(2018, 3, 17, 16, 47, 1))
+
+        msg_info_4 = mi.MessageInfo(MessageTag.NONE, MessageType.USER_DISCONNECT, 0, 0, dt.datetime(2018, 3, 17, 16, 48, 0))
+
+        msg_info_5 = mi.MessageInfo(MessageTag.NONE, MessageType.CHECK_IDLENESS, 0, 0,
+                                    dt.datetime(2018, 3, 17, 16, 55, 0))
+
+        msg_info_6 = mi.MessageInfo(MessageTag.NONE, MessageType.USER_CONNECT, 0, 0,
+                                    dt.datetime(2018, 3, 17, 16, 56, 0))
+
+        msg_info_7 = mi.MessageInfo(MessageTag.NONE, MessageType.CHECK_IDLENESS, 0, 0,
+                                    dt.datetime(2018, 3, 17, 16, 59, 30))
+
+        assert self.alerter.handle_message_tag(msg_info_1) is CriticalMoment.NONE, "ERROR"
+        assert self.alerter.handle_message_tag(msg_info_2) is CriticalMoment.NONE, "ERROR"
+        assert self.alerter.check_idleness_for_test(msg_info_3.room_id,
+                                                    msg_info_3.timestamp) is CriticalMoment.IDLENESS, "ERROR"
+        assert self.alerter.handle_message_tag(msg_info_4) is CriticalMoment.NONE, "ERROR"
+        assert self.alerter.check_idleness_for_test(msg_info_5.room_id,
+                                                    msg_info_5.timestamp) is CriticalMoment.NONE, "ERROR"
+        assert self.alerter.handle_message_tag(msg_info_6) is CriticalMoment.NONE, "ERROR"
+        assert self.alerter.check_idleness_for_test(msg_info_7.room_id,
+                                                    msg_info_7.timestamp) is CriticalMoment.NONE, "ERROR"
+
     def test_idleness_text_alert_for_group(self):
         msg_info_1 = mi.MessageInfo(MessageTag.MAT, MessageType.TEXT, 0, 0, dt.datetime(2018, 3, 17, 16, 35, 0))
         # no idleness in this message since five minutes have not passed

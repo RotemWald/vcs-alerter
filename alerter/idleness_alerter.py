@@ -81,6 +81,11 @@ class IdlenessAlerter:
     def update_user_disconnect(self, msg_info):
         if msg_info.user_id in self.last_message_or_drag_by_user_in_room[msg_info.room_id]:
             del self.last_message_or_drag_by_user_in_room[msg_info.room_id][msg_info.user_id]
+        if len(self.last_message_or_drag_by_user_in_room[msg_info.room_id].keys()) is 0:
+            del self.last_message_or_drag_by_user_in_room[msg_info.room_id]
+            del self.last_message_by_room_id[msg_info.room_id]
+            del self.last_drag_by_room_id[msg_info.room_id]
+            del self.first_msg_timestamp_by_room_id[msg_info.room_id]
 
     def is_room_open(self, room_id):
         # check that the room is open and that the number of users is bigger than zero
